@@ -32,7 +32,7 @@ The main goals:
 | ```once SetText("Amt " $ creepAmt $ endl() $ "Interval: " $ round(Delay/30.0, 2));``` | ``` once```<br>```    "Amt " <-creepAmt concat "```<br>```" concat "Interval: " concat <-Delay 30 div 2 round concat SetText```<br>```endonce``` |
 | ```if(a<b && (c+1 == -c)) [a, b, c] = 1, 2.0, 3.14; ``` | ```<-a <-b lt <-c 1 add <-c neg eq and if```<br>```    1 2 3.140000 ->c ->b ->a```<br>```endif``` |
 | ```do (7) Trace(i);``` | ```7 .. 0 do```<br>```    i Trace```<br>```loop``` |
-| ```do (1 .. 42){```<br>```	a = refRead("num");```<br>```	refWrite("num", 3*(3.14+i));```<br>```}``` | ```42 .. 1 do```<br>```    "num" <-! ->a```<br>```    "num" 7 3.140000 i add mul ->!```<br>```loop``` |
+| ```do (1 .. 42){```<br>```	a = refRead("num");```<br>```	refWrite("num", 3*(3.14+i));```<br>```}``` | ```42 .. 1 do```<br>```    "num" <-! ->a```<br>```    7 3.140000 i add mul "num" ->!```<br>```loop``` |
 
 
 ## Detailed description
