@@ -5,7 +5,8 @@ $maxAmt:1000
 $incrementInterval:10
 once
     Self RemoveImages
-    Self "main" "none" SetImage
+    Self "main" "CustomEmitter" SetImage
+    0.600000 SetTextSize
     <-incrementInterval 1 add SetTimer1
 endonce
 GetTimer1 0 eq if

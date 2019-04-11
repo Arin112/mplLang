@@ -14,7 +14,8 @@ main()inline{ // the function that calls every tick
 	*/
 	once{
 		RemoveImages(Self());
-		SetImage(Self(), "main", "none");
+		SetImage(Self(), "main", "CustomEmitter");
+		SetTextSize(0.6);
 		SetTimer1(incrementInterval + 1);
 	}
 	if(GetTimer1() == 0){
