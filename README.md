@@ -33,7 +33,7 @@ The main goals:
 | ```if(a<b && (c+1 == -c)) [a, b, c] = 1, 2.0, 3.14; ``` | ```<-a <-b lt <-c 1 add <-c neg eq and if```<br>```    1 2 3.140000 ->c ->b ->a```<br>```endif``` |
 | ```do (7) Trace(i);``` | ```7 .. 0 do```<br>```    i Trace```<br>```loop``` |
 | ```do (1 .. 42){```<br>```	a = refRead("num");```<br>```	refWrite(7*(3.14+i), "num");```<br>```}``` | ```42 .. 1 do```<br>```    "num" <-! ->a```<br>```    7 3.140000 i add mul "num" ->!```<br>```loop``` |
-
+| ```if(exists(x)) delete(x);``` | ```-?x if```<br>```    --x```<br>```endif``` |
 
 ## Detailed description
 placeholder
