@@ -26,7 +26,7 @@ The main goals:
 
 | mplLang | crpl |
 | - | - |
-| ```x = 2 + 2;``` | ```2 2 add ->x``` |
+| ```x = 2 + 2 * 2;``` | ```2 2 2 mul add ->x``` |
 | ```z = f(x, y);``` | ```<-x <-y @f ->z``` |
 | ```[x, y] = CurrentCoords();``` | ```CurrentCoords ->y ->x``` |
 | ```once SetText("Amt " $ creepAmt $ endl() $ "Interval: " $ round(Delay/30.0, 2));``` | ``` once```<br>```    "Amt " <-creepAmt concat "```<br>```" concat "Interval: " concat <-Delay 30 div 2 round concat SetText```<br>```endonce``` |
