@@ -23,6 +23,7 @@ The main goals:
 2. Make the process of writing programs on the CRPL easier, while maintaining the speed of the final CRPL code.
 
 ## Examples
+The left column is your mplLang code. The right column is what your code will be translated into.
 
 | mplLang | crpl |
 | - | - |
