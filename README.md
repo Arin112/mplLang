@@ -35,5 +35,6 @@ The main goals:
 | ```do (1 .. 42){```<br>```	a = refRead("num");```<br>```	refWrite(7*(3.14+i), "num");```<br>```}``` | ```42 .. 1 do```<br>```    "num" <-! ->a```<br>```    7 3.140000 i add mul "num" ->!```<br>```loop``` |
 | ```if(exists(x)) delete(x);``` | ```-?x if```<br>```    --x```<br>```endif``` |
 
+Check [examples](https://github.com/Arin112/mplLang/tree/master/examples) for complate example.
 ## Detailed description
 placeholder
