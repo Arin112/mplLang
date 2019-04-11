@@ -9,28 +9,6 @@
 extern bool errorFlag;
 
 using namespace std;
-std::string to_string(Lexem l) {
-	if (l == INT) {
-		return "INT";
-	}
-	else if (l == NAME) {
-		return "NAME";
-	}
-	else if (l == STRING) {
-		return "STRING";
-	}
-	else if (l == DOUBLE) {
-		return "DOUBLE";
-	}
-	else {
-		for (auto i : LexString) {
-			if (l == i.second) {
-				return i.first;
-			}
-		}
-	}
-	throw "can't be";
-}
 
 Lex::Lex(Lexem _type, int _posInFile) :type(_type), posInFile(_posInFile) {}
 

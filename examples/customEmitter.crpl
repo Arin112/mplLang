@@ -1,0 +1,35 @@
+$creepAmt:10
+$addPerTime:1
+$Delay:15
+$maxAmt:1000
+$incrementInterval:10
+once
+    Self RemoveImages
+    Self "main" "none" SetImage
+    <-incrementInterval 1 add SetTimer1
+endonce
+GetTimer1 0 eq if
+    "Amt " <-creepAmt concat "
+" concat "Interval: " concat <-Delay 30 div 2 round concat SetText
+    CurrentCoords <-creepAmt 1 add SetCreeper
+    <-Delay SetTimer1
+endif
+GetTimer0 1 eq <-creepAmt <-maxAmt lt and if
+    <-creepAmt <-addPerTime add ->creepAmt
+    <-incrementInterval 1 add SetTimer0
+endif
+GetTimer2 0 eq if
+    <-RandCoords @f
+    60 SetTimer2
+else
+    <-creepAmt <-maxAmt gt if
+        once
+            <-maxAmt ->creepAmt
+        endonce
+    endif
+endif
+
+:f
+      ->y ->x
+    <-CurrentCoords <-x <-y 1 10 CreateSpore
+

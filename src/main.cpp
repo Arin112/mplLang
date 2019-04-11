@@ -44,7 +44,7 @@ public:
 	}
 };
 
-enum fType { CRPL, MPL, /*DEBUG,*/ INLINE };
+enum fType { CRPL, MPL, /*DEBUG,*/ INLINE, NOSPACEFORWARD };
 
 class mplFunction {
 public:
@@ -52,7 +52,7 @@ public:
 	// int cntIn, cntOut;
 	bool used;
 	vector<fType> type;
-	mplFunction(string body_, string name_, bool used_, vector<fType> type_) :body(body_), name(name_), used(used_), type(type_){}
+	mplFunction(string body_, string name_, vector<fType> type_) :body(body_), name(name_), used(false), type(type_) {}
 	mplFunction() : used(false)/*:cntIn(-1), cntOut(-1)*/ {  }
 	mplFunction(string s) :body(s), name(s), type{ INLINE, CRPL }, used(false){}
 	bool operator==(fType t) { return any_of(type.begin(), type.end(), [&](fType it) {return t == it; }); }
@@ -70,8 +70,15 @@ public:
 		for (auto s : stdFuncs) {
 			funcs.push_back({ s });
 		}
-		funcs.push_back({ "\"\n\"" , "endl", false, {INLINE, CRPL} });
-		funcs.push_back({ "" , "stack", false, {INLINE, CRPL} });
+		funcs.push_back({ "\"\n\"" , "endl", {INLINE, CRPL} });
+		funcs.push_back({ "" , "stack", {INLINE, CRPL} });
+		funcs.push_back({ "<-!", "refRead", {INLINE, CRPL} });
+		funcs.push_back({ "->!", "refWrite", {INLINE, CRPL} });
+		funcs.push_back({ "-?!", "refExists", {INLINE, CRPL} });
+		funcs.push_back({ "--?", "refDelete", {INLINE, CRPL} });
+
+		funcs.push_back({ "-?", "exists", {INLINE, CRPL, NOSPACEFORWARD} });
+		funcs.push_back({ "--", "delete", {INLINE, CRPL, NOSPACEFORWARD} });
 	}
 	inline Lex n() {
 		if (index >= lexems.size())throw ParsException("unexpected end of file", (lexems.end() - 1)->posInFile);
@@ -226,11 +233,22 @@ public:
 		else if (n() == ONCE) {
 			return onceExpr();
 		}
-		else {
-			string str = ind();
-			str += (n() == KLHS ? multiAssign() : expr());
+		else if (n() == DO) {
+			return doExpr();
+		}
+		else if (n() == KLHS) {
+			string str = ind() + multiAssign();
 			eat(SEMICOLON);
 			return str + "\n";
+		}
+		else if (!(n() == SEMICOLON)) {
+			string str = ind() + expr();
+			eat(SEMICOLON);
+			return str + "\n";
+		}
+		else {
+			eat(SEMICOLON);
+			return "\n";
 		}
 	}
 
@@ -304,7 +322,7 @@ public:
 			tStr = ind() + expr() + " .. " + tStr + " do\n";
 		}
 		else {
-			tStr = ind() + "0 .. " + tStr + " do\n";
+			tStr = ind() + tStr + " .. 0" + " do\n";
 		}
 
 		eat(RHS);
@@ -336,7 +354,7 @@ public:
 		for (auto s : exprs) {
 			res += s + " ";
 		}
-		for (int i = names.size()-1; i >= 0; i--) {
+		for (int i = names.size() - 1; i >= 0; i--) {
 			res += "->" + names[i] + (i ? " " : "");
 		}
 		return res;
@@ -474,11 +492,8 @@ public:
 	}
 
 	string atom() {
-		if (n() == INT || n()==DOUBLE) {
-			char buf[100];
-			double d = eat(INT).iInfo;
-			sprintf(buf, ((int(d) != d) ? "%lf" : "%.0lf"), d); // looks like shit. TODO
-			return string(buf);
+		if (n() == INT || n() == DOUBLE) {
+			return num();
 		}
 		else if (n() == STRING) {
 			return "\"" + eat(STRING).sInfo + "\"";
@@ -502,7 +517,8 @@ public:
 			eat(RHS);
 			return tStr;
 		}
-		throw ParsException("expected int|string|var name|function name", n().posInFile);
+		return "";
+		//throw ParsException("expected int|string|var name|function name but get \'" + to_string(n().type)+"\'", n().posInFile);
 	}
 
 	string num() {
@@ -532,10 +548,18 @@ public:
 		eat(LHS);
 		string tStr = exprArgList();
 		eat(RHS);
-		if (f == INLINE)
-			return tStr + (tStr.size() ? " " : "") + f.body;
-		else
-			return tStr + (tStr.size() ? " @" : "@") + name;
+		if (f == NOSPACEFORWARD) {
+			if (tStr.size() >= 2 && tStr[0]=='<' && tStr[1] == '-') {
+				tStr.erase(0, 2);
+			}
+			return f.body + tStr;
+		}
+		else {
+			if (f == INLINE)
+				return tStr + (tStr.size() ? " " : "") + f.body;
+			else
+				return tStr + (tStr.size() ? " @" : "@") + name;
+		}
 	}
 
 	string exprArgList() {
