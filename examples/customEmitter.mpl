@@ -27,7 +27,7 @@ main()inline{ // the function that calls every tick
 		SetTimer0(incrementInterval + 1);
 	}
 	if (GetTimer2() == 0){
-		f(RandCoords);
+		f(RandCoords());
 		SetTimer2(60);
 	}
 	else if(creepAmt > maxAmt) once creepAmt = maxAmt;

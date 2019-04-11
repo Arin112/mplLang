@@ -10,7 +10,7 @@ once
 endonce
 GetTimer1 0 eq if
     "Amt " <-creepAmt concat "
-" concat "Interval: " concat <-Delay 30 div 2 round concat SetText
+" concat "Interval: " concat <-Delay 30.000000 div 2 round concat SetText
     CurrentCoords <-creepAmt 1 add SetCreeper
     <-Delay SetTimer1
 endif
@@ -19,7 +19,7 @@ GetTimer0 1 eq <-creepAmt <-maxAmt lt and if
     <-incrementInterval 1 add SetTimer0
 endif
 GetTimer2 0 eq if
-    <-RandCoords @f
+    RandCoords @f
     60 SetTimer2
 else
     <-creepAmt <-maxAmt gt if
@@ -31,5 +31,5 @@ endif
 
 :f
       ->y ->x
-    <-CurrentCoords <-x <-y 1 10 CreateSpore
+    CurrentCoords <-x <-y 1 10 CreateSpore
 

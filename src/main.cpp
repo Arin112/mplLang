@@ -525,7 +525,7 @@ public:
 		if (n() == DOUBLE) {
 			char buf[100];
 			double d = eat(DOUBLE).dInfo;
-			sprintf(buf, ((int(d) != d) ? "%lf" : "%.0lf"), d); // looks like shit. TODO
+			sprintf(buf, "%lf", d);
 			return string(buf);
 		}
 		else {
