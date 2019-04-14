@@ -1,0 +1,15 @@
+ShowTraceLog
+ClearTraceLog
+"f1 " 1 2 @f1 concat Trace
+"f2 " 1 2   ->y ->x
+<-x 7 mul <-y sub
+ concat Trace
+"f3 " 1 2 swap 7 mul swap sub concat Trace
+"f4 " 1 2 @f4 concat Trace
+
+:f1
+      ->y ->x
+    <-x 7 mul <-y sub
+
+:f4
+swap 7 mul swap sub
