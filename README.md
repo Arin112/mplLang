@@ -41,7 +41,9 @@ Check [examples](https://github.com/Arin112/mplLang/tree/master/examples) for co
 placeholder
 
 ## Patch notes
-
+### v0.24
+#### Bugfixes
++ Fixed `do` expression.
 ### v0.23
 #### Minor Features
 + Add some assignment operators - "+=", "-=", "*=", "/=", "%=", "$=". 
