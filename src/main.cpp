@@ -319,10 +319,10 @@ public:
 
 		if (n() == DPOINT) {
 			eat(DPOINT);
-			tStr = ind() + expr() + " .. " + tStr + " do\n";
+			tStr = ind() + expr() + " " + tStr + " do\n";
 		}
 		else {
-			tStr = ind() + tStr + " .. 0" + " do\n";
+			tStr = ind() + tStr + " 0" + " do\n";
 		}
 
 		eat(RHS);
