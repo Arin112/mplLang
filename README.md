@@ -6,7 +6,7 @@ MplLang is a language created to be translated to [CRPL](https://knucklecracker.
 ## Usage
 ### For windows
 1. Download the program from the link above.
-2. Create a file with ".mpl" extension.
+2. Create a file with ".mpl" extension and write a mplLang program in the file.
 3. Open it with the downloaded program. (Right click -> open with ... )
 4. If your file is not empty and does not contain syntax errors, the program will automatically close and create same-named file with ".crpl" extension.
 You can translate multiple files at the same time.
