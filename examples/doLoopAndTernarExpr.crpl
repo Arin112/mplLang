@@ -1,0 +1,12 @@
+<-i <-j <-k Trace3
+7 0 do
+    i <-j <-k Trace3
+    3 0 do
+        i j <-k Trace3
+        5 0 do
+            i j k Trace3
+        loop
+    loop
+loop
+<-j <-k lt if <-j else <-k endif ->i
+

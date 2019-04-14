@@ -109,6 +109,45 @@ public:
 		if (curIndent.size() >= 4)curIndent.erase(curIndent.end() - 4, curIndent.end());
 	}
 
+	void addIJK() {
+		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == str; }); };
+		auto add = [&](string str) {listExceptions.push_back(str); };
+		if (present("i")) {
+			if (present("j")) {
+				if (present("k")) {
+					add("k");
+					// warn("using 4 or more nested loops is not recomended");
+				}
+				else {
+					add("k");
+				}
+			}
+			else {
+				add("j");
+			}
+		}
+		else {
+			add("i");
+		}
+	}
+
+	void removeIJK() {
+		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == str; }); };
+		auto rem = [&](string str) {auto p = find(listExceptions.begin(), listExceptions.end(), str); if (p != listExceptions.end())listExceptions.erase(p); };
+		if (present("k")) {
+			rem("k");
+		}
+		else if (present("j")) {
+			rem("j");
+		}
+		else if(present("i")) {
+			rem("i");
+		}
+		else {
+			throw "can't be";
+		}
+	}
+
 	void proc() {
 		try {
 			all();
@@ -241,6 +280,9 @@ public:
 			eat(SEMICOLON);
 			return str + "\n";
 		}
+		else if (n() == FOR) {
+			return forExpr();
+		}
 		else if (!(n() == SEMICOLON)) {
 			string str = ind() + expr();
 			eat(SEMICOLON);
@@ -313,6 +355,7 @@ public:
 	}
 
 	string doExpr() {
+		addIJK();
 		eat(DO);
 		eat(LHS);
 		string tStr = expr();
@@ -328,6 +371,41 @@ public:
 		eat(RHS);
 		tStr += weakBody();
 
+		tStr += ind() + "loop\n";
+		removeIJK();
+
+		return tStr;
+	}
+
+	string forExpr() {
+		eat(FOR);
+		eat(LHS);
+		string sOnce, sIf, sAfter;
+		if (!(n() == SEMICOLON)) {
+			if(!(n()==KLHS))
+				sOnce = expr();
+			else sOnce = multiAssign();
+			eat(SEMICOLON);
+		}
+		else eat(SEMICOLON);
+		if (!(n() == SEMICOLON)) {
+			sIf = expr();
+			eat(SEMICOLON);
+		}else eat(SEMICOLON);
+		if (!(n() == RHS)) {
+			if (!(n() == KLHS))
+				sAfter = expr();
+			else sAfter = multiAssign();
+		}
+		eat(RHS);
+
+		string tStr;
+		if (sOnce.size())tStr += ind() + sOnce + "\n";
+		tStr += ind() + "while " + (sIf.size() ? sIf : "True") + " repeat\n";
+		tStr += weakBody();
+		indUp();
+		if(sAfter.size())tStr += ind() + sAfter + "\n";
+		indDown();
 		tStr += ind() + "loop\n";
 		return tStr;
 	}
@@ -361,7 +439,7 @@ public:
 	}
 
 	string expr() {
-		string tStr = concatExpr();
+		string tStr = ternarExpr();
 		vector<Lexem> list = { ASSIGNADD , ASSIGNSUB , ASSIGNMUL, ASSIGNDIV, ASSIGNMOD, ASSIGNCONCAT };
 		if (n() == ASSIGN) {
 			eat(ASSIGN);
@@ -371,45 +449,69 @@ public:
 			if (!all_of(tStr.begin(), tStr.end(), [](char ch) {return isalnum(ch) || ch == '_'; }))
 				throw ParsException("to the left of the sign, only the variable name can be", lexems[index - 1].posInFile);
 
-			return concatExpr() + " ->" + tStr;
+			return ternarExpr() + " ->" + tStr;
 		}
-		else if (any_of(list.begin(), list.end(), [&](auto it) {return n()==it; })) {			
+		else if (any_of(list.begin(), list.end(), [&](auto it) {return n() == it; })) {
 			if (tStr.size() >= 2 && tStr[0] == '<' && tStr[1] == '-') {
 				tStr.erase(0, 2);
 			}
 			if (!all_of(tStr.begin(), tStr.end(), [](char ch) {return isalnum(ch) || ch == '_'; }))
 				throw ParsException("to the left of the sign, only the variable name can be", lexems[index - 1].posInFile);
 			// tStr = "->" + tStr;
-			//string st = concatExpr();
+			// string st = concatExpr();
 			if (n() == ASSIGNADD) {
 				eat(ASSIGNADD);
-				return " <-" + tStr + " "+ concatExpr() + " add ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " add ->" + tStr;
 			}
 			else if (n() == ASSIGNSUB) {
 				eat(ASSIGNSUB);
-				return " <-" + tStr + " " + concatExpr() + " sub ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " sub ->" + tStr;
 			}
 			else if (n() == ASSIGNMUL) {
 				eat(ASSIGNMUL);
-				return " <-" + tStr + " " + concatExpr() + " mul ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " mul ->" + tStr;
 			}
 			else if (n() == ASSIGNDIV) {
 				eat(ASSIGNDIV);
-				return " <-" + tStr + " " + concatExpr() + " div ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " div ->" + tStr;
 			}
 			else if (n() == ASSIGNMOD) {
 				eat(ASSIGNMOD);
-				return " <-" + tStr + " " + concatExpr() + " mod ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " mod ->" + tStr;
 			}
 			else if (n() == ASSIGNCONCAT) {
 				eat(ASSIGNCONCAT);
-				return " <-" + tStr + " " + concatExpr() + " concat ->" + tStr;
+				return "<-" + tStr + " " + ternarExpr() + " concat ->" + tStr;
 			}
 			else {
 				throw "can't be";
 			}
 		}
 		return tStr;
+	}
+
+	string ternarExpr() {
+		string str = concatExpr();
+		if (n() == QMARK) {
+			eat(QMARK);
+			str += " if";
+			if (n() == KLHS) {
+				str += " " + multiAssign();
+			}
+			else {
+				str += " " + expr();
+			}
+			eat(COLON);
+			str += " else ";
+			if (n() == KLHS) {
+				str += multiAssign();
+			}
+			else {
+				str += expr();
+			}
+			str += " endif";
+		}
+		return str;
 	}
 
 	string concatExpr() {
@@ -541,8 +643,7 @@ public:
 			}
 			else {
 				string t = eat(NAME).sInfo;
-				string lowerT = toLower(t);
-				if (!any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == lowerT; }))
+				if (!any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == toLower(t); }))
 					return "<-" + t;
 				else
 					return t;

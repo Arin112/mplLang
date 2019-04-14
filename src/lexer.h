@@ -10,11 +10,11 @@ enum Lexem {
 	/*  STRUCT, UNION,      PUBLIC, PRIVATE, PROTECTED, ENUM,*/ MUL, PLUS, MINUS, DIV,
 	// 'struct''union'     'public''private''protected''enum'  '*'   '+'   '-'   '/' 
 
-	/**/MOD, LT, GT, LTE, GTE, EQ, NEQ, EQ0, NEQ0, ASSIGN, WHILE, IF,
+	/**/MOD, LT, GT, LTE, GTE, EQ, NEQ, EQ0, NEQ0, ASSIGN, WHILE, IF, QMARK,
 	//  '%' '<' '>' '<=' '>=' '==''!=' '==0' '!=0'  '='   'while' 'if'
 
-	/**/ONCE, ELSE, OR, AND, POW, STRING, DO, DPOINT, LOOP, DOLLAR,
-	// 'once''else''||' '&&' '^'         'do' '..'   'loop' '$'
+	/**/ONCE, ELSE, OR, AND, POW, STRING, DO, DPOINT, LOOP, DOLLAR, FOR,
+	// 'once''else''||' '&&' '^'         'do' '..'   'loop' '$'    'for'
 
 	ASSIGNADD, ASSIGNSUB, ASSIGNMUL, ASSIGNDIV, ASSIGNMOD, ASSIGNCONCAT
 	// '+='      '-='        '*='       '/='      '%='
@@ -32,12 +32,12 @@ static const std::vector<std::pair<const std::string, Lexem>> LexString = {
 	{ "==", EQ }, { "!=", NEQ }, { "=", ASSIGN },
 	{ "while", WHILE }, { "if", IF }, { "once", ONCE}, { "else", ELSE },
 	{ "||", OR }, { "&&", AND }, { "^", POW }, { "do" , DO }, { "..", DPOINT },
-	{ "loop", LOOP}, { "$", DOLLAR }
+	{ "loop", LOOP}, { "$", DOLLAR }, { "for", FOR }, { "?", QMARK }
 };
 
 std::string to_string(Lexem l);
 
-class Lex { // TODO rewrite to std::variant
+class Lex { // TODO rewrite to std::variant. maybe...
 public:
 	Lexem type;
 	std::string sInfo;

@@ -3,6 +3,19 @@ MplLang is a language created to be translated to [CRPL](https://knucklecracker.
 
 [![Download mplLang](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/mpllang/files/latest/download)
 
++ [mplLang](#mpllang)
+  * [Usage](#usage)
+    + [For windows](#for-windows)
+    + [For Linux & OS X](#for-linux---os-x)
+  * [Overview](#overview)
+  * [Examples](#examples)
+  * [Detailed description](#detailed-description)
+  * [Patch notes](#patch-notes)
+    + [v0.25](#v025)
+    + [v0.24](#v024)
+    + [v0.23](#v023)
+  * [Special thanks](#special-thanks)
+
 ## Usage
 ### For windows
 1. Download the program from the link above.
@@ -38,9 +51,39 @@ The left column is your mplLang code. The right column is what your code will be
 
 Check [examples](https://github.com/Arin112/mplLang/tree/master/examples) for complate example.
 ## Detailed description
-placeholder
+placeholder. Coming soon.
 
 ## Patch notes
+### v0.25
+#### Minor Features
++ Add `for` expression
+```
+for(i = 0; i<10; i+=1) Trace(i);
+```
+Will be translated as
+```
+0 ->i
+while <-i 10 lt repeat
+    <-i Trace
+    <-i 1 add ->i
+loop
+```
++ Add ternar expression
+```
+min = a < b ? a : b;
+```
+Will be translated as
+```
+<-a <-b lt if <-a else <-b endif ->min
+```
+#### Changes
++ Now you can use `i`, `j` and `k` as normal variable, except the body of the expression `do`.
+In simple do loop expression `i` will be [I](https://knucklecracker.com/wiki/doku.php?id=crpl:docs:i) function from CRPL;
+In nested do `i` and `j`([J](https://knucklecracker.com/wiki/doku.php?id=crpl:docs:j)) will be CRPL functions;
+In double nested do loop`k` also will be [K](https://knucklecracker.com/wiki/doku.php?id=crpl:docs:k) CRPL function;
+Check [doLoopAndTernarExpr.mpl](https://github.com/Arin112/mplLang/tree/master/examples/doLoopAndTernarExpr.mpl) and [doLoopAndTernarExpr.crpl](https://github.com/Arin112/mplLang/tree/master/examples/doLoopAndTernarExpr.crpl) files to see how this will look like.
+#### Bugfixes
++ Fixed wrong indent on some assignment operations
 ### v0.24
 #### Bugfixes
 + Fixed `do` expression.
@@ -50,3 +93,5 @@ placeholder
 #### Bugfixes
 + Fixed that if you write the name of the standard function in the wrong case it will be recognized as a normal function.
 + Fixed parsing operations ">=" and "<="
+## Special thanks
+Many thanks to Grabz, K75, Regallion - members of the [discord server](https://discord.gg/AqkZ3Ew), who advised me in the CRPL
