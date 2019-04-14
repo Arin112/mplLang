@@ -27,7 +27,7 @@ string errOut(const string &s, int index) {
 	str += '\n';
 	int ti = i2, num = 0;
 	while (ti >= 0)if (s[ti--] == '\n')num++;
-	str = "In string #" + to_string(num) + "\n" + str;
+	str = "In line #" + to_string(num) + "\n" + str;
 	for (int i = 0; i < index - i1; i++) {
 		str += ' ';
 	}
@@ -362,6 +362,7 @@ public:
 
 	string expr() {
 		string tStr = concatExpr();
+		vector<Lexem> list = { ASSIGNADD , ASSIGNSUB , ASSIGNMUL, ASSIGNDIV, ASSIGNMOD, ASSIGNCONCAT };
 		if (n() == ASSIGN) {
 			eat(ASSIGN);
 			if (tStr.size() >= 2 && tStr[0] == '<' && tStr[1] == '-') {
@@ -371,6 +372,42 @@ public:
 				throw ParsException("to the left of the sign, only the variable name can be", lexems[index - 1].posInFile);
 
 			return concatExpr() + " ->" + tStr;
+		}
+		else if (any_of(list.begin(), list.end(), [&](auto it) {return n()==it; })) {			
+			if (tStr.size() >= 2 && tStr[0] == '<' && tStr[1] == '-') {
+				tStr.erase(0, 2);
+			}
+			if (!all_of(tStr.begin(), tStr.end(), [](char ch) {return isalnum(ch) || ch == '_'; }))
+				throw ParsException("to the left of the sign, only the variable name can be", lexems[index - 1].posInFile);
+			// tStr = "->" + tStr;
+			//string st = concatExpr();
+			if (n() == ASSIGNADD) {
+				eat(ASSIGNADD);
+				return " <-" + tStr + " "+ concatExpr() + " add ->" + tStr;
+			}
+			else if (n() == ASSIGNSUB) {
+				eat(ASSIGNSUB);
+				return " <-" + tStr + " " + concatExpr() + " sub ->" + tStr;
+			}
+			else if (n() == ASSIGNMUL) {
+				eat(ASSIGNMUL);
+				return " <-" + tStr + " " + concatExpr() + " mul ->" + tStr;
+			}
+			else if (n() == ASSIGNDIV) {
+				eat(ASSIGNDIV);
+				return " <-" + tStr + " " + concatExpr() + " div ->" + tStr;
+			}
+			else if (n() == ASSIGNMOD) {
+				eat(ASSIGNMOD);
+				return " <-" + tStr + " " + concatExpr() + " mod ->" + tStr;
+			}
+			else if (n() == ASSIGNCONCAT) {
+				eat(ASSIGNCONCAT);
+				return " <-" + tStr + " " + concatExpr() + " concat ->" + tStr;
+			}
+			else {
+				throw "can't be";
+			}
 		}
 		return tStr;
 	}
@@ -535,21 +572,16 @@ public:
 
 	string func() {
 		string name = eat(NAME).sInfo;
-		if (!any_of(funcs.begin(), funcs.end(), [=](mplFunction it) {
-			string ts1 = it.name, ts2 = name;
-			std::transform(ts2.begin(), ts2.end(), ts2.begin(), ::tolower);
-			std::transform(ts1.begin(), ts1.end(), ts1.begin(), ::tolower);
-			return ts1 == ts2;
-		})) {
+		if (!any_of(funcs.begin(), funcs.end(), [=](mplFunction it) { return toLower(it.name) == toLower(name); })) {
 			throw ParsException("undefined function", lexems[index - 1].posInFile);
 		}
-		mplFunction &f = *find_if(funcs.begin(), funcs.end(), [&](mplFunction it) {return it.name == name; });
+		mplFunction &f = *find_if(funcs.begin(), funcs.end(), [&](mplFunction it) {return toLower(it.name) == toLower(name); });
 		f.used = true;
 		eat(LHS);
 		string tStr = exprArgList();
 		eat(RHS);
 		if (f == NOSPACEFORWARD) {
-			if (tStr.size() >= 2 && tStr[0]=='<' && tStr[1] == '-') {
+			if (tStr.size() >= 2 && tStr[0] == '<' && tStr[1] == '-') {
 				tStr.erase(0, 2);
 			}
 			return f.body + tStr;

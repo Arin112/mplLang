@@ -13,8 +13,11 @@ enum Lexem {
 	/**/MOD, LT, GT, LTE, GTE, EQ, NEQ, EQ0, NEQ0, ASSIGN, WHILE, IF,
 	//  '%' '<' '>' '<=' '>=' '==''!=' '==0' '!=0'  '='   'while' 'if'
 
-	/**/ONCE, ELSE, OR, AND, POW, STRING, DO, DPOINT, LOOP, DOLLAR
+	/**/ONCE, ELSE, OR, AND, POW, STRING, DO, DPOINT, LOOP, DOLLAR,
 	// 'once''else''||' '&&' '^'         'do' '..'   'loop' '$'
+
+	ASSIGNADD, ASSIGNSUB, ASSIGNMUL, ASSIGNDIV, ASSIGNMOD, ASSIGNCONCAT
+	// '+='      '-='        '*='       '/='      '%='
 };
 
 static const std::vector<std::pair<const std::string, Lexem>> LexString = {
@@ -22,8 +25,10 @@ static const std::vector<std::pair<const std::string, Lexem>> LexString = {
 	{ "[", KLHS }, { "]", KRHS }, { ";", SEMICOLON }, { ":", COLON },
 	// { "struct", STRUCT }, { "union", UNION }, { "public", PUBLIC },
 	// { "private", PRIVATE }, { "protected", PROTECTED }, { "enum", ENUM },
+	{ "+=", ASSIGNADD }, { "-=", ASSIGNSUB },
+	{ "*=", ASSIGNMUL }, { "/=", ASSIGNDIV }, { "%=", ASSIGNMOD }, { "$=", ASSIGNCONCAT },
 	{ "*", MUL }, { "+", PLUS }, { "-", MINUS }, { "/", DIV }, { "%", MOD },
-	{ "<", LT }, { ">", GT }, { "<=", LTE }, { ">=", GTE },
+	{ "<=", LTE }, { ">=", GTE }, { "<", LT }, { ">", GT },
 	{ "==", EQ }, { "!=", NEQ }, { "=", ASSIGN },
 	{ "while", WHILE }, { "if", IF }, { "once", ONCE}, { "else", ELSE },
 	{ "||", OR }, { "&&", AND }, { "^", POW }, { "do" , DO }, { "..", DPOINT },

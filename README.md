@@ -39,3 +39,12 @@ The left column is your mplLang code. The right column is what your code will be
 Check [examples](https://github.com/Arin112/mplLang/tree/master/examples) for complate example.
 ## Detailed description
 placeholder
+
+## Patch notes
+
+### v0.23
+#### Minor Features
++ Add some assignment operators - "+=", "-=", "*=", "/=", "%=", "$=". 
+#### Bugfixes
++ Fixed that if you write the name of the standard function in the wrong case it will be recognized as a normal function.
++ Fixed parsing operations ">=" and "<="
