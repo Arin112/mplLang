@@ -110,7 +110,7 @@ public:
 	}
 
 	void addIJK() {
-		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == str; }); };
+		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return toLower(it) == toLower(str); }); };
 		auto add = [&](string str) {listExceptions.push_back(str); };
 		if (present("i")) {
 			if (present("j")) {
@@ -132,7 +132,7 @@ public:
 	}
 
 	void removeIJK() {
-		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == str; }); };
+		auto present = [&](string str) {return any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return toLower(it) == toLower(str); }); };
 		auto rem = [&](string str) {auto p = find(listExceptions.begin(), listExceptions.end(), str); if (p != listExceptions.end())listExceptions.erase(p); };
 		if (present("k")) {
 			rem("k");
@@ -643,7 +643,7 @@ public:
 			}
 			else {
 				string t = eat(NAME).sInfo;
-				if (!any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return it == toLower(t); }))
+				if (!any_of(listExceptions.begin(), listExceptions.end(), [&](auto it) {return toLower(it) == toLower(t); }))
 					return "<-" + t;
 				else
 					return t;
