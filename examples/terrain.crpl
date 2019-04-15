@@ -1,0 +1,11 @@
+HideTraceLog
+ClearTraceLog
+once
+    MapHeight 0 do
+        MapWidth 0 do
+            i j i j add 10.000000 div sin 1 add 2.000000 div 5.000000 mul i j sub 10.000000 div cos 1.000000 add 2.000000 div mul 5.000000 mul 25.000000 div 9 mul 1 add SetTerrain
+        loop
+        1 delay
+    loop
+endonce
+
