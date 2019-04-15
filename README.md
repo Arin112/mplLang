@@ -11,6 +11,7 @@ MplLang is a language created to be translated to [CRPL](https://knucklecracker.
   * [Examples](#examples)
   * [Detailed description](#detailed-description)
   * [Patch notes](#patch-notes)
+    + [v0.26](#v026)
     + [v0.25](#v025)
     + [v0.24](#v024)
     + [v0.23](#v023)
@@ -54,6 +55,9 @@ Check [examples](https://github.com/Arin112/mplLang/tree/master/examples) for co
 placeholder. Coming soon.
 
 ## Patch notes
+### v0.26
+#### Bugfixes
++ Fixed translation of `CONST_...` constants. 
 ### v0.25
 #### Minor Features
 + Add `for` expression
